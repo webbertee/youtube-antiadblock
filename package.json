@@ -1,9 +1,9 @@
 {
   "name": "youtube-antiadblock",
-  "title": "youtube-antiadblock",
+  "title": "Youtube-Antiadblock",
   "id": "jid1-6AoYOPfyIamvcA",
-  "description": "a basic add-on",
-  "author": "",
-  "license": "MPL 2.0",
+  "description": "Whitelist Youtube channels in Adblock Plus",
+  "author": "webbertee",
+  "license": "http://creativecommons.org/licenses/by-sa/4.0/",
   "version": "0.1"
 }
