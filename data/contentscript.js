@@ -33,7 +33,7 @@ function setYTID() {
 	var clink = document.querySelector('.yt-user-info > a[href*="/channel/"]');
 	var ytid;
 	if (clink) {
-	  var ytid = clink.href.slice(clink.href.lastIndexOf("/")+1);
+	  ytid = clink.href.slice(clink.href.lastIndexOf("/")+1);
 	  if (location.href.search("&channel=") == -1)
 		location.replace(location.href+"&channel="+ytid);
 	  addMenu(ytid);
