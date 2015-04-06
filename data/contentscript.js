@@ -8,7 +8,8 @@
 // @include     https://*.youtube.com/*
 
 // For static pages
-setYTID();
+if(location.href.search("/watch") > -1)
+	refresh();
 
 // For dynamic content changes, like when clicking a video on the main page.'#watch7-content link[href*="/user/"]
 // This bit is based on Gantt's excellent Download YouTube Videos As MP4 script:
@@ -18,7 +19,7 @@ var observer = new MutationObserver(function(mutations) {
     if (mutation.addedNodes !== null) {
       for (i = 0; i < mutation.addedNodes.length; i++) {
         if (mutation.addedNodes[i].id == "watch7-container") {
-          if(setYTID())
+			refresh()
 			break;
         }
       }
@@ -28,25 +29,29 @@ var observer = new MutationObserver(function(mutations) {
 observer.observe(document.body, {childList: true, subtree: true});
 
 
-function setYTID() {
+function refresh() {
+	var ytid = getYTID();
+	if(ytid !== "") {
+		if (location.href.search("&channel=") == -1)
+			location.replace(location.href+"&channel="+ytid);
+		addMenu();
+	}
+}
+
+function getYTID() {
 	// clink: Link to channel
 	var clink = document.querySelector('.yt-user-info > a[href*="/channel/"]');
-	var ytid;
-	if (clink) {
-	  ytid = clink.href.slice(clink.href.lastIndexOf("/")+1);
-	  if (location.href.search("&channel=") == -1)
-		location.replace(location.href+"&channel="+ytid);
-	  addMenu(ytid);
-	  return true;
-	}
-	return false;
+	if (clink) 
+	  return clink.href.slice(clink.href.lastIndexOf("/")+1);
+	else
+	  return "";
 }
 
 
 
 // Add the context menu to the user name below the video
 // Only works in Firefox
-function addMenu(ytid) {
+function addMenu() {
 
   var uh = document.getElementById("watch7-user-header");
   var menu = document.createElement("menu");
@@ -70,7 +75,7 @@ function addMenu(ytid) {
   function getFilter() {
 	var fpo = "@@||youtube.com/*&channel=";
     var fpt = "$document";
-    var ffl = fpo+ytid+fpt;
+    var ffl = fpo + getYTID() + fpt;
 	return ffl;
   }
   function abpAddFilter() { 
