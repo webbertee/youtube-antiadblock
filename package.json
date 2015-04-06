@@ -5,5 +5,12 @@
   "description": "Whitelist Youtube channels in Adblock Plus",
   "author": "webbertee",
   "license": "http://creativecommons.org/licenses/by-sa/4.0/",
-  "version": "0.1"
+  "version": "0.1",
+  "preferences": [{
+    "name": "preFixLinks",
+	"title": "Automatically fix links on Youtube",
+	"description": "Fix links on Youtube so they have the &channel= argument.",
+	"type": "bool",
+	"value": true
+	}]
 }
