@@ -17,6 +17,8 @@ function callFixes() {
         fixSub();
     else if(location.href.search("/watch") > -1)
         fixWatch();
+	else
+		fixHome();
 }
 
 function fixSub() {
@@ -31,6 +33,18 @@ function fixSub() {
 
 function fixWatch() {
     var itemList = document.querySelectorAll(".video-list-item");
+    for (var i = 0; i < itemList.length; ++i) {
+        //hovercSpan belongs to the g+ hovercard
+        var hovercSpan = itemList[i].querySelector('.g-hovercard');
+        if(hovercSpan) {
+            var ytid = hovercSpan.getAttribute("data-ytid");
+            extendLinks(itemList[i], ytid);
+        }
+    }
+}
+
+function fixHome() {
+    var itemList = document.querySelectorAll(".yt-lockup-dismissable");
     for (var i = 0; i < itemList.length; ++i) {
         //hovercSpan belongs to the g+ hovercard
         var hovercSpan = itemList[i].querySelector('.g-hovercard');
