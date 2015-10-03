@@ -1,58 +1,51 @@
-// ==UserScript==
-// @name        YouTube - whitelist channels in Adblock Plus
-// @namespace   http://forums.mozillazine.org/memberlist.php?mode=viewprofile&u=261941
-// @author      Gingerbread Man, customized by webbertee
-// @credits     Eyeo GmbH, Gantt
-// @description Helps whitelist YouTube channels in Adblock Plus
-// @include     http://*.youtube.com/*
-// @include     https://*.youtube.com/*
+"use strict";
 
-// For static pages
-if(location.href.search("/watch") > -1)
-	refresh();
+//This contentscript adds the channelID to the url and adds the menus for adding filters
 
-// For dynamic content changes, like when clicking a video on the main page.'#watch7-content link[href*="/user/"]
-// This bit is based on Gantt's excellent Download YouTube Videos As MP4 script:
-// https://github.com/gantt/downloadyoutube
-var observer = new MutationObserver(function(mutations) {
-  mutations.forEach(function(mutation) {
-    if (mutation.addedNodes !== null) {
-      for (i = 0; i < mutation.addedNodes.length; i++) {
-        if (mutation.addedNodes[i].id == "watch7-container") {
-			refresh()
-			break;
-        }
-      }
-    }
-  });
-});
-observer.observe(document.body, {childList: true, subtree: true});
+main();
 
-
-function refresh() {
+function main() {
+	//Set up static pages
 	var ytid = getYTID();
 	if(ytid !== "") {
-		if (location.href.search("&channel=") == -1)
-			location.replace(location.href+"&channel="+ytid);
-		addMenu();
+		setUpSite(ytid);
 	}
+	
+	//Catch dynamic events
+	var pageElement = window.document.getElementById("page");
+	var observer = new MutationObserver(function(mutations) {
+		//the "watch-shell" class gets added as long as the page is loading and is then removed
+		//this is a hack of course, but I could not find any other way to detect video switching
+		if(pageElement.className.indexOf("watch-shell") === -1) {
+			ytid = getYTID();
+			if(ytid !== "") {
+				setUpSite(ytid);
+			}
+		}
+	});
+	
+	observer.observe(pageElement, {attributes: true});
+	window.onbeforeunload =  function() { observer.disconnect(); };
 }
 
 function getYTID() {
 	// clink: Link to channel
-	var clink = document.querySelector('.yt-user-info > a[href*="/channel/"]');
+	var clink = window.document.querySelector('.yt-user-info > a[href*="/channel/"]');
+	
 	if (clink) 
 	  return clink.href.slice(clink.href.lastIndexOf("/")+1);
 	else
 	  return "";
 }
 
-
+function setUpSite(ytid) {
+	if (location.href.search("&channel=") == -1)
+		location.replace(location.href+"&channel="+ytid);
+	addMenu(ytid);
+}
 
 // Add the context menu to the user name below the video
-// Only works in Firefox
-function addMenu() {
-
+function addMenu(ytid) {
   var uh = document.getElementById("watch7-user-header");
   var menu = document.createElement("menu");
   menu.setAttribute("id", "abpfilter");
@@ -86,6 +79,7 @@ function addMenu() {
   function abpRemoveFilter() {
 	self.port.emit("removeFilter", getFilter());
   }
+  
   mione.addEventListener("click",abpAddFilter,false);
   mitwo.addEventListener("click",abpRemoveFilter, false);
 }

@@ -1,11 +1,12 @@
 {
   "name": "youtube-antiadblock",
   "title": "Youtube-Channel Whitelister for Adblock Plus",
-  "id": "jid1-6AoYOPfyIamvcA",
+  "id": "jid1-6AoYOPfyIamvcA@jetpack",
   "description": "Whitelist Youtube channels in Adblock Plus",
   "author": "webbertee",
   "license": "http://creativecommons.org/licenses/by-sa/4.0/",
-  "version": "0.1",
+  "version": "0.1.2",
+  "main": "lib/main.js",
   "preferences": [{
     "name": "preFixLinks",
 	"title": "Automatically fix links on Youtube",

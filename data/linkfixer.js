@@ -1,5 +1,4 @@
-//-----the my-subcriptions page-----
-//get all feed items
+"use strict";
 
 //static loading:
 callFixes();
@@ -7,29 +6,18 @@ callFixes();
 //dynamic loading
 var observer = new MutationObserver(function() {
     callFixes();
-    console.log("chages observed");
 });
 observer.observe(document.body, {childList: true, subtree: false});
+window.onbeforeunload = function() { observer.disconnect(); };
 
 
 function callFixes() {
-    if(location.href.search("/feed/") > -1)
-        fixSub();
-    else if(location.href.search("/watch") > -1)
-        fixWatch();
+    if(location.href.search("/watch") > -1)
+		fixWatch();
 	else
 		fixHome();
 }
 
-function fixSub() {
-    var itemList = document.querySelectorAll(".feed-item-main-content");
-    for (var i = 0; i < itemList.length; ++i) {
-        //clink is the link to the channel
-        var clink = itemList[i].querySelector('a[href*="/channel/"]');
-        var ytid = clink.href.slice(clink.href.lastIndexOf("/")+1);
-        extendLinks(itemList[i], ytid);        
-    }
-}
 
 function fixWatch() {
     var itemList = document.querySelectorAll(".video-list-item");
@@ -44,7 +32,7 @@ function fixWatch() {
 }
 
 function fixHome() {
-    var itemList = document.querySelectorAll(".yt-lockup-dismissable");
+    var itemList = document.querySelectorAll(".yt-lockup");
     for (var i = 0; i < itemList.length; ++i) {
         //hovercSpan belongs to the g+ hovercard
         var hovercSpan = itemList[i].querySelector('.g-hovercard');
